@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado da Autoavaliação</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 24px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 32px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 2rem;
+            color: #111827;
+        }
+
+        p {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .alert {
+            display: none;
+            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        thead {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 16px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        tbody tr:hover {
+            background: #eef4ff;
+        }
+
+        .score {
+            width: 140px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .status {
+            width: 160px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .alta {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .media {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .baixa {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .summary {
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .summary-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .summary-box h2 {
+            font-size: 1rem;
+            margin: 0 0 8px;
+            color: #374151;
+        }
+
+        .summary-box strong {
+            font-size: 1.5rem;
+            color: #111827;
+        }
+
+        .actions {
+            margin-top: 28px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 24px rgba(37, 99, 235, 0.24);
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            th,
+            td {
+                padding: 12px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <section class="card">
+            <h1>Resultado da Autoavaliação</h1>
+            <p> Veja abaixo a pontuação final de cada característica empreendedora, carregada automaticamente a partir
+                das respostas enviadas na página anterior. </p>
+            <div id="alerta" class="alert"> Nenhum resultado foi encontrado. Preencha o formulário antes de acessar esta
+                página. </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica empreendedora</th>
+                            <th class="score">Pontuação</th>
+                            <th class="status">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaResultados"></tbody>
+                </table>
+            </div>
+            <div class="summary">
+                <div class="summary-box">
+                    <h2>Total geral</h2> <strong id="totalGeral">0</strong>
+                </div>
+                <div class="summary-box">
+                    <h2>Média</h2> <strong id="mediaGeral">0</strong>
+                </div>
+                <div class="summary-box">
+                    <h2>Maior pontuação</h2> <strong id="maiorPontuacao">0</strong>
+                </div>
+            </div>
+            <div class="actions"> <a href="index.html" class="btn">Voltar ao questionário</a> </div>
+        </section>
+    </main>
+    <script> document.addEventListener("DOMContentLoaded", function () { const resultados = [{ nome: "Estabelecimento de metas", chave: "est_de_met" }, { nome: "Riscos calculados", chave: "ris_calc" }, { nome: "Qualidade", chave: "qual" }, { nome: "Planejamento", chave: "plan" }, { nome: "Busca de Informações", chave: "busc_info" }, { nome: "Busca de oportunidades", chave: "busc_opor" }, { nome: "Iniciativa própria", chave: "init_prop" }, { nome: "Persistência", chave: "persis" }, { nome: "Eficiência", chave: "efic" }, { nome: "Persuasão", chave: "persua" }, { nome: "Necessidade de independência", chave: "necess_de_idp" }, { nome: "Autoconfiança", chave: "autoconf" }, { nome: "Comprometimento", chave: "compr" }]; const tabela = document.getElementById("tabelaResultados"); const alerta = document.getElementById("alerta"); const totalGeralEl = document.getElementById("totalGeral"); const mediaGeralEl = document.getElementById("mediaGeral"); const maiorPontuacaoEl = document.getElementById("maiorPontuacao"); let totalGeral = 0; let maiorPontuacao = 0; let encontrouDados = false; function classificarPontuacao(valor) { if (valor >= 10) { return { texto: "Alta", classe: "alta" }; } else if (valor >= 7) { return { texto: "Média", classe: "media" }; } else { return { texto: "Baixa", classe: "baixa" }; } } resultados.forEach(item => { const valorSalvo = localStorage.getItem(item.chave); const pontuacao = valorSalvo !== null ? parseInt(valorSalvo, 10) : null; if (pontuacao !== null && !isNaN(pontuacao)) { encontrouDados = true; totalGeral += pontuacao; if (pontuacao > maiorPontuacao) { maiorPontuacao = pontuacao; } const classificacao = classificarPontuacao(pontuacao); const linha = document.createElement("tr"); linha.innerHTML = ` <td>${item.nome}</td> <td class="score">${pontuacao}</td> <td class="status"> <span class="badge ${classificacao.classe}">${classificacao.texto}</span> </td> `; tabela.appendChild(linha); } }); if (!encontrouDados) { alerta.style.display = "block"; totalGeralEl.textContent = "0"; mediaGeralEl.textContent = "0"; maiorPontuacaoEl.textContent = "0"; return; } totalGeralEl.textContent = totalGeral; mediaGeralEl.textContent = (totalGeral / resultados.length).toFixed(1); maiorPontuacaoEl.textContent = maiorPontuacao; }); </script>
+</body>
+
+</html>
